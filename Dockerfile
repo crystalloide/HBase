@@ -20,8 +20,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # ── Java ─────────────────────────────────────────────────────
-# NOTE : Java 1.8.0_251 demandé, mais HBase 2.6.x exige Java ≥ 11.
-#        On installe OpenJDK 11. Pour Java 8 strict, utiliser HBase ≤ 2.4.x
+# NOTE : HBase 2.6.x exige Java ≥ 11.
+#        On installe OpenJDK 11. 
+# Pour Java 8 strict, utiliser HBase ≤ 2.4.x
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 ENV PATH=$PATH:$JAVA_HOME/bin
 
