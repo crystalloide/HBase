@@ -1,4 +1,4 @@
-# Hadoop HandLab – Cluster Multi-Nœuds Docker
+# Handlab Hadoop HBase – Cluster multi-nœuds avec docker compose
 
 ## Architecture du cluster
 
