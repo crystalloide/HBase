@@ -1,6 +1,6 @@
 # ============================================================
 #  Hadoop Lab – Image unique pour tous les nœuds
-#  Java 11 (requis par HBase 2.6.x) | ZK 3.7.0 | Hadoop 3.1.0
+#  Java 11 (requis par HBase 2.6.x) | ZK 3.7.0 | Hadoop 3.3.6
 #  HBase 2.6.4 | Zeppelin 0.10.1
 # ============================================================
 FROM ubuntu:20.04
@@ -54,8 +54,8 @@ RUN wget -q https://archive.apache.org/dist/zookeeper/zookeeper-${ZK_VERSION}/ap
     && chown -R hadoop:hadoop /opt/zookeeper
 ENV PATH=$PATH:$ZOOKEEPER_HOME/bin
 
-# ── Hadoop 3.1.0 ─────────────────────────────────────────────
-ENV HADOOP_VERSION=3.1.0
+# ── Hadoop 3.3.6 ─────────────────────────────────────────────
+ENV HADOOP_VERSION=3.3.6
 ENV HADOOP_HOME=/opt/hadoop
 ENV HADOOP_MAPRED_HOME=$HADOOP_HOME
 ENV HADOOP_COMMON_HOME=$HADOOP_HOME
