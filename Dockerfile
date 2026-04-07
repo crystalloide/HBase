@@ -1,6 +1,6 @@
 # ============================================================
 #  Hadoop Lab – Image unique pour tous les nœuds
-#  Java 11 (requis par HBase 2.6.x) | ZK 3.7.0 | Hadoop 3.3.6
+#  Java 11 (requis par HBase 2.6.x) | ZK 3.7.0 | Hadoop 3.1.0
 #  HBase 2.6.4 | Zeppelin 0.10.1
 # ============================================================
 FROM ubuntu:20.04
@@ -20,9 +20,6 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # ── Java ─────────────────────────────────────────────────────
-# NOTE : HBase 2.6.x exige Java ≥ 11.
-#        On installe OpenJDK 11. 
-# Pour Java 8 strict, utiliser HBase ≤ 2.4.x
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 ENV PATH=$PATH:$JAVA_HOME/bin
 
@@ -39,8 +36,8 @@ RUN mkdir -p /home/hadoop/.ssh \
     && chmod 600 /home/hadoop/.ssh/authorized_keys \
     && chown -R hadoop:hadoop /home/hadoop/.ssh \
     && mkdir -p /var/run/sshd
-RUN echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config \
-    && echo "UserKnownHostsFile /dev/null"  >> /etc/ssh/ssh_config
+RUN echo "StrictHostKeyChecking no"       >> /etc/ssh/ssh_config \
+    && echo "UserKnownHostsFile /dev/null" >> /etc/ssh/ssh_config
 
 # ── ZooKeeper 3.7.0 ──────────────────────────────────────────
 ENV ZK_VERSION=3.7.0
@@ -54,14 +51,14 @@ RUN wget -q https://archive.apache.org/dist/zookeeper/zookeeper-${ZK_VERSION}/ap
     && chown -R hadoop:hadoop /opt/zookeeper
 ENV PATH=$PATH:$ZOOKEEPER_HOME/bin
 
-# ── Hadoop 3.3.6 ─────────────────────────────────────────────
-ENV HADOOP_VERSION=3.3.6
+# ── Hadoop 3.1.0 ─────────────────────────────────────────────
+ENV HADOOP_VERSION=3.1.0
 ENV HADOOP_HOME=/opt/hadoop
+ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 ENV HADOOP_MAPRED_HOME=$HADOOP_HOME
 ENV HADOOP_COMMON_HOME=$HADOOP_HOME
 ENV HADOOP_HDFS_HOME=$HADOOP_HOME
 ENV HADOOP_YARN_HOME=$HADOOP_HOME
-ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 RUN wget -q https://archive.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz \
         -O /tmp/hadoop.tar.gz \
     && tar -xzf /tmp/hadoop.tar.gz -C /opt \
@@ -70,6 +67,20 @@ RUN wget -q https://archive.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSIO
     && mkdir -p /opt/hadoop/data/{namenode,datanode,tmp,secondarynamenode} \
     && chown -R hadoop:hadoop /opt/hadoop
 ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+
+
+# ── FIX Java 11 : javax.activation supprimé du JDK ───────────
+# Hadoop 3.1.0 a été conçu pour Java 8. javax.activation et
+# jaxb-api ont été retirés du JDK en Java 9/11.
+# On les ajoute manuellement dans tous les lib/ de Hadoop.
+RUN for dir in common hdfs yarn mapreduce; do \
+        mkdir -p /opt/hadoop/share/hadoop/${dir}/lib; \
+        wget -q https://repo1.maven.org/maven2/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar \
+             -O /opt/hadoop/share/hadoop/${dir}/lib/javax.activation-api-1.2.0.jar; \
+        wget -q https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar \
+             -O /opt/hadoop/share/hadoop/${dir}/lib/jaxb-api-2.3.1.jar; \
+    done \
+    && chown -R hadoop:hadoop /opt/hadoop/share/hadoop/*/lib/
 
 # ── HBase 2.6.4 ──────────────────────────────────────────────
 ENV HBASE_VERSION=2.6.4
@@ -93,19 +104,12 @@ RUN wget -q https://archive.apache.org/dist/zeppelin/zeppelin-${ZEPPELIN_VERSION
     && chown -R hadoop:hadoop /opt/zeppelin
 ENV PATH=$PATH:$ZEPPELIN_HOME/bin
 
-# ── Répertoires de scripts ────────────────────────────────────
-RUN mkdir -p /opt/scripts && chown -R hadoop:hadoop /opt/scripts
-
-# ── Copie des configurations ──────────────────────────────────
-COPY --chown=hadoop:hadoop conf/hadoop/      $HADOOP_CONF_DIR/
-COPY --chown=hadoop:hadoop conf/hbase/       $HBASE_HOME/conf/
-COPY --chown=hadoop:hadoop conf/zookeeper/zoo.cfg $ZOOKEEPER_HOME/conf/zoo.cfg
-COPY --chown=root:root      scripts/         /opt/scripts/
-RUN chmod +x /opt/scripts/*.sh
-
-
-# Ajout
-
+# ── FIX PATH : /etc/profile.d/hadoop-env.sh ──────────────────
+# Les variables ENV Docker ne sont PAS héritées par les shells
+# login (su -l hadoop, ssh hadoop@...). Ce fichier profile.d est
+# sourcé automatiquement par bash --login sur tous les nœuds.
+# On utilise printf pour écrire chaque ligne proprement sans
+# risque de troncature ou d'échappement.
 RUN printf '%s\n' \
     '#!/bin/bash' \
     'export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64' \
@@ -122,15 +126,20 @@ RUN printf '%s\n' \
     > /etc/profile.d/hadoop-env.sh \
     && chmod +x /etc/profile.d/hadoop-env.sh \
     && echo 'source /etc/profile.d/hadoop-env.sh' >> /home/hadoop/.bashrc \
-    && echo 'source /etc/profile.d/hadoop-env.sh' >> /home/hadoop/.bash_profile
+    && echo 'source /etc/profile.d/hadoop-env.sh' >> /home/hadoop/.bash_profile \
+    && chown hadoop:hadoop /home/hadoop/.bashrc /home/hadoop/.bash_profile
+
+# ── Répertoires de scripts ────────────────────────────────────
+RUN mkdir -p /opt/scripts && chown -R hadoop:hadoop /opt/scripts
+
+# ── Copie des configurations ──────────────────────────────────
+COPY --chown=hadoop:hadoop conf/hadoop/           $HADOOP_CONF_DIR/
+COPY --chown=hadoop:hadoop conf/hbase/            $HBASE_HOME/conf/
+COPY --chown=hadoop:hadoop conf/zookeeper/zoo.cfg $ZOOKEEPER_HOME/conf/zoo.cfg
+COPY --chown=root:root      scripts/              /opt/scripts/
+RUN chmod +x /opt/scripts/*.sh
 
 # ── Ports exposés ─────────────────────────────────────────────
-# ZK: 2181 (client), 2888 (follower), 3888 (election)
-# HDFS: 9000 (NN RPC), 9870 (NN UI), 9868 (2NN UI)
-# YARN: 8088 (RM UI), 8032 (RM RPC), 8042 (NM UI)
-# MR History: 10020, 19888
-# HBase: 16000 (Master RPC), 16010 (Master UI), 16020 (RS RPC), 16030 (RS UI)
-# Zeppelin: 8080
 EXPOSE 22 2181 2888 3888 9000 9870 9868 8088 8032 8042 10020 19888 16000 16010 16020 16030 8080
 
 ENTRYPOINT ["/opt/scripts/entrypoint.sh"]
