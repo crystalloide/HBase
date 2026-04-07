@@ -46,23 +46,6 @@ rm -f /tmp/*.pid ${ZOOKEEPER_HOME}/data/zookeeper_server.pid 2>/dev/null || true
 pkill -9 -f "proc_namenode\|proc_datanode\|proc_resourcemanager\|proc_nodemanager\|JobHistoryServer\|HMaster\|HRegionServer" 2>/dev/null || true
 sleep 2
 
-# ── FIX javax.activation (Hadoop 3.1.x + Java 11) ───────────
-FIX_JAR="${HADOOP_HOME}/share/hadoop/yarn/lib/javax.activation-api-1.2.0.jar"
-if [ ! -f "${FIX_JAR}" ]; then
-    log "[FIX3] Patch javax.activation + jaxb-api..."
-    for url in \
-        "https://repo1.maven.org/maven2/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar" \
-        "https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar"; do
-        fname=$(basename $url)
-        wget -q "$url" -O /tmp/$fname || { warn "Download $fname échoué"; continue; }
-        for dir in common hdfs yarn mapreduce; do
-            mkdir -p ${HADOOP_HOME}/share/hadoop/${dir}/lib
-            cp /tmp/$fname ${HADOOP_HOME}/share/hadoop/${dir}/lib/ 2>/dev/null || true
-        done
-    done
-    chown -R hadoop:hadoop ${HADOOP_HOME}/share/hadoop/*/lib/ 2>/dev/null || true
-    log "[FIX3] Classpath patché ✓"
-fi
 
 # ── /etc/hosts (filet de sécurité si DNS Docker lent) ────────
 for entry in \
