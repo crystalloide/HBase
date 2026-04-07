@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<configuration>
+  <!-- Écouter sur toutes les interfaces (pas seulement 127.0.0.1) -->
+  <property>
+    <name>zeppelin.server.addr</name>
+    <value>0.0.0.0</value>
+  </property>
+
+  <property>
+    <name>zeppelin.server.port</name>
+    <value>8080</value>
+  </property>
+
+  <!-- Dossiers notebook et logs -->
+  <property>
+    <name>zeppelin.notebook.dir</name>
+    <value>/opt/zeppelin/notebook</value>
+  </property>
+</configuration>
