@@ -82,7 +82,7 @@ sleep 4
 wait_for() {
     local host=$1 port=$2 label=${3:-"$1:$2"} max=${4:-90} i=0
     log "Attente $label ($host:$port)..."
-    while ! nc -z localhost "$port" 2>/dev/null; do
+    while ! nc -z "$host" "$port" 2>/dev/null; do
         i=$((i+1)); [ $i -ge $max ] && { warn "$label non dispo après ${max}x2s"; return 1; }
         sleep 2
     done
