@@ -15,10 +15,10 @@
 | Composant   | Version  | Notes                                    |
 |------------|----------|------------------------------------------|
 | Java       | OpenJDK 11 | ⚠ HBase 2.6.x exige Java ≥ 11 (voir §Note) |
-| ZooKeeper  | 3.7.0    | Ensemble de 5 nœuds                      |
-| Hadoop     | 3.1.0    | Non-HA (NameNode unique)                 |
+| ZooKeeper  | 3.7.2    | Ensemble de 5 nœuds                      |
+| Hadoop     | 3.3.6    | Non-HA (NameNode unique)                 |
 | HBase      | 2.6.4    | ZooKeeper externe                        |
-| Zeppelin   | 0.10.1   | Sur srvmaster01 uniquement               |
+| Zeppelin   | 0.12.0   | Sur srvmaster01 uniquement               |
 
 > **⚠ Note Java** : HBase 2.6.x requiert Java 11+.
 - L'image utilise OpenJDK 11.
