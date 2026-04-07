@@ -2,7 +2,7 @@
 # ============================================================
 #  clean-cluster.sh – Réinitialise complètement le cluster
 #  ⚠ ATTENTION : supprime toutes les données persistantes !
-#  À exécuter depuis le répertoire hadoop-cluster/ sur l'hôte
+#  À exécuter depuis le répertoire HBase/ sur l'hôte
 # ============================================================
 
 echo "⚠ Arrêt et suppression de tous les conteneurs..."
