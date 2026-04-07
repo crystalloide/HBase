@@ -2,56 +2,41 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
 
-  <!-- Facteur de réplication (3 DataNodes) -->
-  <property>
-    <name>dfs.replication</name>
-    <value>3</value>
-  </property>
-
-  <!-- Répertoires NameNode -->
+  <property><name>dfs.replication</name><value>3</value></property>
   <property>
     <name>dfs.namenode.name.dir</name>
     <value>file:///opt/hadoop/data/namenode</value>
   </property>
-
-  <!-- Répertoires DataNode -->
   <property>
     <name>dfs.datanode.data.dir</name>
     <value>file:///opt/hadoop/data/datanode</value>
   </property>
-
-  <!-- Secondary NameNode -->
   <property>
-    <name>dfs.namenode.secondary.http-address</name>
-    <value>srvmaster02:9868</value>
-  </property>
-  <property>
-    <name>dfs.namenode.secondary.https-address</name>
-    <value>srvmaster02:9869</value>
+    <name>dfs.namenode.checkpoint.dir</name>
+    <value>file:///opt/hadoop/data/secondarynamenode</value>
   </property>
 
-  <!-- Web UI NameNode -->
+  <!-- FIX : bind RPC sur 0.0.0.0 (pas juste le hostname) -->
   <property>
-    <name>dfs.namenode.http-address</name>
-    <value>0.0.0.0:9870</value>
+    <name>dfs.namenode.rpc-address</name>
+    <value>srvmaster01:9000</value>
+  </property>
+  <property>
+    <name>dfs.namenode.rpc-bind-host</name>
+    <value>0.0.0.0</value>
   </property>
 
-  <!-- Bloc HDFS = 128 MB -->
-  <property>
-    <name>dfs.blocksize</name>
-    <value>134217728</value>
-  </property>
+  <!-- WebUI sur 0.0.0.0 -->
+  <property><name>dfs.namenode.http-address</name><value>0.0.0.0:9870</value></property>
+  <property><name>dfs.namenode.https-address</name><value>0.0.0.0:9871</value></property>
+  <property><name>dfs.namenode.secondary.http-address</name><value>srvmaster02:9868</value></property>
 
-  <!-- Permissions -->
-  <property>
-    <name>dfs.permissions.enabled</name>
-    <value>true</value>
-  </property>
+  <!-- DataNode bind 0.0.0.0 -->
+  <property><name>dfs.datanode.address</name><value>0.0.0.0:9866</value></property>
+  <property><name>dfs.datanode.http.address</name><value>0.0.0.0:9864</value></property>
+  <property><name>dfs.datanode.ipc.address</name><value>0.0.0.0:9867</value></property>
 
-  <!-- Taille du cache DataNode -->
-  <property>
-    <name>dfs.datanode.max.transfer.threads</name>
-    <value>4096</value>
-  </property>
-
+  <property><name>dfs.webhdfs.enabled</name><value>true</value></property>
+  <property><name>dfs.permissions.enabled</name><value>true</value></property>
+  <property><name>dfs.namenode.safemode.threshold-pct</name><value>0.9f</value></property>
 </configuration>

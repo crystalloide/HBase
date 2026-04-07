@@ -2,10 +2,27 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
 
-  <!-- Framework d'exécution MapReduce -->
+  <!-- Framework d'exécution -->
   <property>
     <name>mapreduce.framework.name</name>
     <value>yarn</value>
+  </property>
+
+  <!-- ── FIX CLASSPATH : obligatoire en Hadoop 3.x ──
+       Sans cette propriété, le ApplicationMaster MapReduce
+       ne trouve pas ses JARs et échoue au lancement. -->
+  <property>
+    <name>mapreduce.application.classpath</name>
+    <value>
+      $HADOOP_MAPRED_HOME/share/hadoop/mapreduce/*,
+      $HADOOP_MAPRED_HOME/share/hadoop/mapreduce/lib/*,
+      $HADOOP_COMMON_HOME/share/hadoop/common/*,
+      $HADOOP_COMMON_HOME/share/hadoop/common/lib/*,
+      $HADOOP_HDFS_HOME/share/hadoop/hdfs/*,
+      $HADOOP_HDFS_HOME/share/hadoop/hdfs/lib/*,
+      $HADOOP_YARN_HOME/share/hadoop/yarn/*,
+      $HADOOP_YARN_HOME/share/hadoop/yarn/lib/*
+    </value>
   </property>
 
   <!-- JobHistory Server -->
@@ -17,8 +34,16 @@
     <name>mapreduce.jobhistory.webapp.address</name>
     <value>srvmaster01:19888</value>
   </property>
+  <property>
+    <name>mapreduce.jobhistory.intermediate-done-dir</name>
+    <value>/mr-history/tmp</value>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.done-dir</name>
+    <value>/mr-history/done</value>
+  </property>
 
-  <!-- Mémoire pour les tâches Map et Reduce -->
+  <!-- Mémoire tâches Map / Reduce -->
   <property>
     <name>mapreduce.map.memory.mb</name>
     <value>512</value>
@@ -44,6 +69,12 @@
   <property>
     <name>yarn.app.mapreduce.am.command-opts</name>
     <value>-Xmx409m</value>
+  </property>
+
+  <!-- FIX : récupération des jobs MR en cas de crash AM -->
+  <property>
+    <name>yarn.app.mapreduce.am.job.recovery.enable</name>
+    <value>true</value>
   </property>
 
 </configuration>

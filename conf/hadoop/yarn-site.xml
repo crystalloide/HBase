@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
 
-  <!-- Service shuffle MapReduce -->
   <property>
     <name>yarn.nodemanager.aux-services</name>
     <value>mapreduce_shuffle</value>
@@ -12,10 +10,16 @@
     <value>org.apache.hadoop.mapred.ShuffleHandler</value>
   </property>
 
-  <!-- ResourceManager -->
+  <!-- ResourceManager address -->
   <property>
     <name>yarn.resourcemanager.hostname</name>
     <value>srvmaster01</value>
+  </property>
+
+  <!-- FIX : ResourceManager WebUI sur 0.0.0.0 -->
+  <property>
+    <name>yarn.resourcemanager.webapp.address</name>
+    <value>0.0.0.0:8088</value>
   </property>
   <property>
     <name>yarn.resourcemanager.address</name>
@@ -29,64 +33,43 @@
     <name>yarn.resourcemanager.resource-tracker.address</name>
     <value>srvmaster01:8031</value>
   </property>
+
+  <!-- NodeManager -->
   <property>
-    <name>yarn.resourcemanager.admin.address</name>
-    <value>srvmaster01:8033</value>
+    <name>yarn.nodemanager.vmem-check-enabled</name>
+    <value>false</value>
   </property>
   <property>
-    <name>yarn.resourcemanager.webapp.address</name>
-    <value>srvmaster01:8088</value>
+    <name>yarn.nodemanager.pmem-check-enabled</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.webapp.address</name>
+    <value>0.0.0.0:8042</value>
   </property>
 
-  <!-- Ressources NodeManager (adapter selon RAM disponible) -->
+  <!-- Memory par NodeManager (adapté aux conteneurs) -->
   <property>
     <name>yarn.nodemanager.resource.memory-mb</name>
-    <value>4096</value>
+    <value>2048</value>
   </property>
-  <property>
-    <name>yarn.nodemanager.resource.cpu-vcores</name>
-    <value>4</value>
-  </property>
-
-  <!-- Scheduler -->
   <property>
     <name>yarn.scheduler.minimum-allocation-mb</name>
-    <value>512</value>
+    <value>256</value>
   </property>
   <property>
     <name>yarn.scheduler.maximum-allocation-mb</name>
     <value>2048</value>
   </property>
-  <property>
-    <name>yarn.scheduler.minimum-allocation-vcores</name>
-    <value>1</value>
-  </property>
-  <property>
-    <name>yarn.scheduler.maximum-allocation-vcores</name>
-    <value>4</value>
-  </property>
 
-  <!-- Variables d'environnement transmises aux conteneurs -->
-  <property>
-    <name>yarn.nodemanager.env-whitelist</name>
-    <value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,
-           CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_HOME,PATH</value>
-  </property>
-
-  <!-- Logs agrégés -->
+  <!-- Log aggregation -->
   <property>
     <name>yarn.log-aggregation-enable</name>
     <value>true</value>
   </property>
   <property>
-    <name>yarn.log-aggregation.retain-seconds</name>
-    <value>86400</value>
-  </property>
-
-  <!-- Health check NodeManager -->
-  <property>
-    <name>yarn.nodemanager.health-checker.script.timeout-ms</name>
-    <value>5000</value>
+    <name>yarn.log.server.url</name>
+    <value>http://srvmaster01:19888/jobhistory/logs</value>
   </property>
 
 </configuration>
