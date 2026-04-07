@@ -57,6 +57,10 @@ ENV PATH=$PATH:$ZOOKEEPER_HOME/bin
 # ── Hadoop 3.1.0 ─────────────────────────────────────────────
 ENV HADOOP_VERSION=3.1.0
 ENV HADOOP_HOME=/opt/hadoop
+ENV HADOOP_MAPRED_HOME=$HADOOP_HOME
+ENV HADOOP_COMMON_HOME=$HADOOP_HOME
+ENV HADOOP_HDFS_HOME=$HADOOP_HOME
+ENV HADOOP_YARN_HOME=$HADOOP_HOME
 ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 RUN wget -q https://archive.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz \
         -O /tmp/hadoop.tar.gz \
