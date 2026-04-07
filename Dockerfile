@@ -103,6 +103,27 @@ COPY --chown=hadoop:hadoop conf/zookeeper/zoo.cfg $ZOOKEEPER_HOME/conf/zoo.cfg
 COPY --chown=root:root      scripts/         /opt/scripts/
 RUN chmod +x /opt/scripts/*.sh
 
+
+# Ajout
+
+RUN printf '%s\n' \
+    '#!/bin/bash' \
+    'export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64' \
+    'export HADOOP_HOME=/opt/hadoop' \
+    'export HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop' \
+    'export HADOOP_MAPRED_HOME=/opt/hadoop' \
+    'export HADOOP_COMMON_HOME=/opt/hadoop' \
+    'export HADOOP_HDFS_HOME=/opt/hadoop' \
+    'export HADOOP_YARN_HOME=/opt/hadoop' \
+    'export HBASE_HOME=/opt/hbase' \
+    'export ZOOKEEPER_HOME=/opt/zookeeper' \
+    'export ZEPPELIN_HOME=/opt/zeppelin' \
+    'export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$HBASE_HOME/bin:$ZOOKEEPER_HOME/bin:$ZEPPELIN_HOME/bin:$PATH' \
+    > /etc/profile.d/hadoop-env.sh \
+    && chmod +x /etc/profile.d/hadoop-env.sh \
+    && echo 'source /etc/profile.d/hadoop-env.sh' >> /home/hadoop/.bashrc \
+    && echo 'source /etc/profile.d/hadoop-env.sh' >> /home/hadoop/.bash_profile
+
 # ── Ports exposés ─────────────────────────────────────────────
 # ZK: 2181 (client), 2888 (follower), 3888 (election)
 # HDFS: 9000 (NN RPC), 9870 (NN UI), 9868 (2NN UI)
