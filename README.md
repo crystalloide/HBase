@@ -30,11 +30,29 @@
 - RAM disponible : ≥ 16 Go recommandés (3 Go/conteneur)
 - Espace disque : ≥ 20 Go (build initial ~6 Go, Zeppelin ~1 Go)
 
+#### Préparation de l'environnement
+
+```bash
+cd ~
+# A ne pas faire en production évidemment : 
+sudo systemctl stop apparmor
+sudo systemctl stop ufw
+sudo systemctl disable apparmor
+sudo systemctl disable ufw
+```
+
+```bash
+cd ~
+sudo rm -Rf ~/HBase
+PWD=~/HBase
+```
+
 ## Démarrage rapide
 
 ```bash
 # 1. Cloner/décompresser le projet
-cd hadoop-cluster/
+git clone https://github.com/crystalloide/HBase
+cd ~/HBase/
 
 # 2. Construire l'image (première fois, ~20-30 min selon le réseau)
 docker compose build
