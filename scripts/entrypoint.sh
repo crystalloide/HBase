@@ -45,20 +45,20 @@ pkill -f "proc_namenode\|proc_datanode\|proc_resourcemanager\|proc_nodemanager\|
 sleep 2
 
 # ── FIX javax.activation (Hadoop < 3.3 + Java 11) ───────────
-PATCH_JAR1="${HADOOP_HOME}/share/hadoop/yarn/lib/javax.activation-api-1.2.0.jar"
-if [ ! -f "${PATCH_JAR1}" ]; then
-    log "[FIX] Téléchargement javax.activation-api..."
-    wget -q https://repo1.maven.org/maven2/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar \
-         -O "${PATCH_JAR1}" && log "[FIX] OK ✓" || warn "[FIX] Download échoué"
-    wget -q https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar \
-         -O "${HADOOP_HOME}/share/hadoop/yarn/lib/jaxb-api-2.3.1.jar" || true
-    for dir in common hdfs mapreduce; do
-        mkdir -p ${HADOOP_HOME}/share/hadoop/${dir}/lib
-        cp -n "${PATCH_JAR1}" ${HADOOP_HOME}/share/hadoop/${dir}/lib/ 2>/dev/null || true
-        cp -n "${HADOOP_HOME}/share/hadoop/yarn/lib/jaxb-api-2.3.1.jar" \
-              ${HADOOP_HOME}/share/hadoop/${dir}/lib/ 2>/dev/null || true
-    done
-fi
+#PATCH_JAR1="${HADOOP_HOME}/share/hadoop/yarn/lib/javax.activation-api-1.2.0.jar"
+#if [ ! -f "${PATCH_JAR1}" ]; then
+#    log "[FIX] Téléchargement javax.activation-api..."
+#    wget -q https://repo1.maven.org/maven2/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar \
+#         -O "${PATCH_JAR1}" && log "[FIX] OK ✓" || warn "[FIX] Download échoué"
+#    wget -q https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar \
+#         -O "${HADOOP_HOME}/share/hadoop/yarn/lib/jaxb-api-2.3.1.jar" || true
+#    for dir in common hdfs mapreduce; do
+#        mkdir -p ${HADOOP_HOME}/share/hadoop/${dir}/lib
+#        cp -n "${PATCH_JAR1}" ${HADOOP_HOME}/share/hadoop/${dir}/lib/ 2>/dev/null || true
+#       cp -n "${HADOOP_HOME}/share/hadoop/yarn/lib/jaxb-api-2.3.1.jar" \
+#              ${HADOOP_HOME}/share/hadoop/${dir}/lib/ 2>/dev/null || true
+#    done
+#fi
 
 # ── /etc/hosts ───────────────────────────────────────────────
 for entry in \
