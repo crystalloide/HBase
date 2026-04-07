@@ -21,7 +21,8 @@ export YARN_NODEMANAGER_USER=hadoop
 export MAPRED_HISTORYSERVER_USER=hadoop
 
 # Options JVM pour les daemons
-export HADOOP_NAMENODE_OPTS="-XX:+UseParallelGC -Xmx1g"
-export HADOOP_DATANODE_OPTS="-XX:+UseParallelGC -Xmx512m"
+export HDFS_NAMENODE_OPTS="-XX:+UseParallelGC -Xmx1g"
+export HDFS_DATANODE_OPTS="-XX:+UseParallelGC -Xmx512m"
+export HDFS_SECONDARYNAMENODE_OPTS="-XX:+UseParallelGC -Xmx512m"
 export YARN_RESOURCEMANAGER_OPTS="-Xmx1g"
 export YARN_NODEMANAGER_OPTS="-Xmx512m"
