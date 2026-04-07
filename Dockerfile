@@ -91,6 +91,9 @@ RUN wget -q https://downloads.apache.org/zeppelin/zeppelin-${ZEPPELIN_VERSION}/z
     && chown -R hadoop:hadoop /opt/zeppelin
 ENV PATH=$PATH:$ZEPPELIN_HOME/bin
 COPY --chown=hadoop:hadoop conf/zeppelin/zeppelin-site.xml $ZEPPELIN_HOME/conf/zeppelin-site.xml
+COPY --chown=hadoop:hadoop conf/zeppelin/zeppelin-env.sh  $ZEPPELIN_HOME/conf/zeppelin-env.sh
+COPY --chown=hadoop:hadoop conf/zeppelin/zeppelin-site.xml $ZEPPELIN_HOME/conf/zeppelin-site.xml
+RUN chmod +x $ZEPPELIN_HOME/conf/zeppelin-env.sh
 
 # ── FIX PATH : /etc/profile.d/hadoop-env.sh ──────────────────
 # Les variables ENV Docker ne sont PAS héritées par les shells
