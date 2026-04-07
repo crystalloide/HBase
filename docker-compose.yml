@@ -1,0 +1,176 @@
+# ============================================================
+#  Cluster Hadoop – HandLab de Formation
+#  5 nœuds : 2 masters + 3 workers
+#  Réseau : 192.168.100.0/24
+# ============================================================
+version: '3.8'
+
+networks:
+  hadoop-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.100.0/24
+          gateway: 192.168.100.1
+
+volumes:
+  namenode-data:
+  secondarynamenode-data:
+  datanode1-data:
+  datanode2-data:
+  datanode3-data:
+  zk1-data:
+  zk2-data:
+  zk3-data:
+  zk4-data:
+  zk5-data:
+
+services:
+
+  # ── srvmaster01 ──────────────────────────────────────────────
+  # Rôles : NameNode (HDFS), ResourceManager (YARN),
+  #         HBase Master (actif), ZooKeeper, Zeppelin
+  srvmaster01:
+    build: .
+    image: hadoop-lab:latest
+    container_name: srvmaster01
+    hostname: srvmaster01
+    restart: unless-stopped
+    networks:
+      hadoop-net:
+        ipv4_address: 192.168.100.100
+    environment:
+      - NODE_ROLE=master01
+      - ZK_ID=1
+      - JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+      - HADOOP_HOME=/opt/hadoop
+      - HBASE_HOME=/opt/hbase
+      - ZOOKEEPER_HOME=/opt/zookeeper
+      - ZEPPELIN_HOME=/opt/zeppelin
+    volumes:
+      - namenode-data:/opt/hadoop/data/namenode
+      - zk1-data:/opt/zookeeper/data
+    ports:
+      - "9870:9870"    # HDFS NameNode Web UI
+      - "9000:9000"    # HDFS NameNode RPC
+      - "8088:8088"    # YARN ResourceManager UI
+      - "8032:8032"    # YARN RM RPC
+      - "19888:19888"  # MapReduce JobHistory UI
+      - "16010:16010"  # HBase Master UI
+      - "16000:16000"  # HBase Master RPC
+      - "8080:8080"    # Zeppelin
+      - "2181:2181"    # ZooKeeper client (master01)
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9870"]
+      interval: 20s
+      timeout: 10s
+      retries: 20
+      start_period: 120s
+
+  # ── srvmaster02 ──────────────────────────────────────────────
+  # Rôles : Secondary NameNode (HDFS), HBase Master (backup),
+  #         ZooKeeper
+  srvmaster02:
+    build: .
+    image: hadoop-lab:latest
+    container_name: srvmaster02
+    hostname: srvmaster02
+    restart: unless-stopped
+    networks:
+      hadoop-net:
+        ipv4_address: 192.168.100.200
+    environment:
+      - NODE_ROLE=master02
+      - ZK_ID=2
+      - JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+      - HADOOP_HOME=/opt/hadoop
+      - HBASE_HOME=/opt/hbase
+      - ZOOKEEPER_HOME=/opt/zookeeper
+    volumes:
+      - secondarynamenode-data:/opt/hadoop/data/secondarynamenode
+      - zk2-data:/opt/zookeeper/data
+    ports:
+      - "9868:9868"    # Secondary NameNode UI
+      - "16011:16010"  # HBase Backup Master UI
+    depends_on:
+      - srvmaster01
+
+  # ── srvdata01 ────────────────────────────────────────────────
+  # Rôles : DataNode (HDFS), NodeManager (YARN),
+  #         HBase RegionServer, ZooKeeper
+  srvdata01:
+    build: .
+    image: hadoop-lab:latest
+    container_name: srvdata01
+    hostname: srvdata01
+    restart: unless-stopped
+    networks:
+      hadoop-net:
+        ipv4_address: 192.168.100.101
+    environment:
+      - NODE_ROLE=worker
+      - ZK_ID=3
+      - JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+      - HADOOP_HOME=/opt/hadoop
+      - HBASE_HOME=/opt/hbase
+      - ZOOKEEPER_HOME=/opt/zookeeper
+    volumes:
+      - datanode1-data:/opt/hadoop/data/datanode
+      - zk3-data:/opt/zookeeper/data
+    ports:
+      - "8042:8042"    # NodeManager UI
+      - "16030:16030"  # RegionServer UI
+    depends_on:
+      - srvmaster01
+
+  # ── srvdata02 ────────────────────────────────────────────────
+  srvdata02:
+    build: .
+    image: hadoop-lab:latest
+    container_name: srvdata02
+    hostname: srvdata02
+    restart: unless-stopped
+    networks:
+      hadoop-net:
+        ipv4_address: 192.168.100.102
+    environment:
+      - NODE_ROLE=worker
+      - ZK_ID=4
+      - JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+      - HADOOP_HOME=/opt/hadoop
+      - HBASE_HOME=/opt/hbase
+      - ZOOKEEPER_HOME=/opt/zookeeper
+    volumes:
+      - datanode2-data:/opt/hadoop/data/datanode
+      - zk4-data:/opt/zookeeper/data
+    ports:
+      - "8043:8042"    # NodeManager UI
+      - "16031:16030"  # RegionServer UI
+    depends_on:
+      - srvmaster01
+
+  # ── srvdata03 ────────────────────────────────────────────────
+  srvdata03:
+    build: .
+    image: hadoop-lab:latest
+    container_name: srvdata03
+    hostname: srvdata03
+    restart: unless-stopped
+    networks:
+      hadoop-net:
+        ipv4_address: 192.168.100.103
+    environment:
+      - NODE_ROLE=worker
+      - ZK_ID=5
+      - JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+      - HADOOP_HOME=/opt/hadoop
+      - HBASE_HOME=/opt/hbase
+      - ZOOKEEPER_HOME=/opt/zookeeper
+    volumes:
+      - datanode3-data:/opt/hadoop/data/datanode
+      - zk5-data:/opt/zookeeper/data
+    ports:
+      - "8044:8042"    # NodeManager UI
+      - "16032:16030"  # RegionServer UI
+    depends_on:
+      - srvmaster01

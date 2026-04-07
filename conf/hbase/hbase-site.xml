@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+
+  <!-- Répertoire racine HBase sur HDFS -->
+  <property>
+    <name>hbase.rootdir</name>
+    <value>hdfs://srvmaster01:9000/hbase</value>
+    <description>Répertoire HDFS pour les données HBase</description>
+  </property>
+
+  <!-- Mode distribué -->
+  <property>
+    <name>hbase.cluster.distributed</name>
+    <value>true</value>
+  </property>
+
+  <!-- ZooKeeper externe (ZK 3.7.0 sur les 5 nœuds) -->
+  <property>
+    <name>hbase.zookeeper.quorum</name>
+    <value>srvmaster01,srvmaster02,srvdata01,srvdata02,srvdata03</value>
+  </property>
+  <property>
+    <name>hbase.zookeeper.property.clientPort</name>
+    <value>2181</value>
+  </property>
+  <property>
+    <name>hbase.zookeeper.property.dataDir</name>
+    <value>/opt/zookeeper/data</value>
+  </property>
+
+  <!-- Master HBase -->
+  <property>
+    <name>hbase.master</name>
+    <value>srvmaster01:16000</value>
+  </property>
+  <property>
+    <name>hbase.master.port</name>
+    <value>16000</value>
+  </property>
+  <property>
+    <name>hbase.master.info.port</name>
+    <value>16010</value>
+  </property>
+
+  <!-- RegionServer -->
+  <property>
+    <name>hbase.regionserver.port</name>
+    <value>16020</value>
+  </property>
+  <property>
+    <name>hbase.regionserver.info.port</name>
+    <value>16030</value>
+  </property>
+
+  <!-- Mémoire MemStore -->
+  <property>
+    <name>hbase.regionserver.global.memstore.size</name>
+    <value>0.4</value>
+  </property>
+  <property>
+    <name>hfile.block.cache.size</name>
+    <value>0.4</value>
+  </property>
+
+  <!-- Timeout et retries -->
+  <property>
+    <name>hbase.rpc.timeout</name>
+    <value>60000</value>
+  </property>
+  <property>
+    <name>hbase.client.operation.timeout</name>
+    <value>120000</value>
+  </property>
+
+  <!-- Compatibilité Hadoop 3 -->
+  <property>
+    <name>hbase.unsafe.stream.capability.enforce</name>
+    <value>false</value>
+  </property>
+
+</configuration>

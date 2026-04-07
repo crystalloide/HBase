@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+
+  <!-- URI du NameNode -->
+  <property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://srvmaster01:9000</value>
+    <description>Adresse du NameNode HDFS</description>
+  </property>
+
+  <!-- Répertoire temporaire Hadoop -->
+  <property>
+    <name>hadoop.tmp.dir</name>
+    <value>/opt/hadoop/data/tmp</value>
+  </property>
+
+  <!-- ZooKeeper quorum (utilisé par ZKFailoverController, etc.) -->
+  <property>
+    <name>ha.zookeeper.quorum</name>
+    <value>srvmaster01:2181,srvmaster02:2181,srvdata01:2181,srvdata02:2181,srvdata03:2181</value>
+  </property>
+
+  <!-- Compression par défaut -->
+  <property>
+    <name>io.compression.codecs</name>
+    <value>org.apache.hadoop.io.compress.GzipCodec,
+           org.apache.hadoop.io.compress.DefaultCodec,
+           org.apache.hadoop.io.compress.BZip2Codec,
+           org.apache.hadoop.io.compress.SnappyCodec</value>
+  </property>
+
+</configuration>
