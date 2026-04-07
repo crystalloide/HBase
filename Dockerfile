@@ -1,6 +1,6 @@
 # ============================================================
 #  Hadoop Lab – Image unique pour tous les nœuds
-#  Java 11 (requis par HBase 2.6.x) | ZK 3.7.0 | Hadoop 3.1.0
+#  Java 11 (requis par HBase 2.6.x) | ZK 3.7.0 | Hadoop 3.3.6
 #  HBase 2.6.4 | Zeppelin 0.10.1
 # ============================================================
 FROM ubuntu:20.04
@@ -51,8 +51,8 @@ RUN wget -q https://archive.apache.org/dist/zookeeper/zookeeper-${ZK_VERSION}/ap
     && chown -R hadoop:hadoop /opt/zookeeper
 ENV PATH=$PATH:$ZOOKEEPER_HOME/bin
 
-# ── Hadoop 3.1.0 ─────────────────────────────────────────────
-ENV HADOOP_VERSION=3.1.0
+# ── Hadoop 3.3.6 ─────────────────────────────────────────────
+ENV HADOOP_VERSION=3.3.6
 ENV HADOOP_HOME=/opt/hadoop
 ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 ENV HADOOP_MAPRED_HOME=$HADOOP_HOME
@@ -68,19 +68,6 @@ RUN wget -q https://archive.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSIO
     && chown -R hadoop:hadoop /opt/hadoop
 ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
 
-
-# ── FIX Java 11 : javax.activation supprimé du JDK ───────────
-# Hadoop 3.1.0 a été conçu pour Java 8. javax.activation et
-# jaxb-api ont été retirés du JDK en Java 9/11.
-# On les ajoute manuellement dans tous les lib/ de Hadoop.
-RUN for dir in common hdfs yarn mapreduce; do \
-        mkdir -p /opt/hadoop/share/hadoop/${dir}/lib; \
-        wget -q https://repo1.maven.org/maven2/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar \
-             -O /opt/hadoop/share/hadoop/${dir}/lib/javax.activation-api-1.2.0.jar; \
-        wget -q https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar \
-             -O /opt/hadoop/share/hadoop/${dir}/lib/jaxb-api-2.3.1.jar; \
-    done \
-    && chown -R hadoop:hadoop /opt/hadoop/share/hadoop/*/lib/
 
 # ── HBase 2.6.4 ──────────────────────────────────────────────
 ENV HBASE_VERSION=2.6.4
