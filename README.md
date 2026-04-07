@@ -21,8 +21,8 @@
 | Zeppelin   | 0.10.1   | Sur srvmaster01 uniquement               |
 
 > **⚠ Note Java** : HBase 2.6.x requiert Java 11+.
-> L'image utilise OpenJDK 11.
-> Pour utiliser Java 8, remplacer HBase par la version 2.4.x.
+- L'image utilise OpenJDK 11.
+- Pour utiliser Java 8, remplacer HBase par la version 2.4.x.
 
 ## Prérequis
 
