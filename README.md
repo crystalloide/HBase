@@ -54,16 +54,24 @@ PWD=~/HBase
 # 1. Cloner/décompresser le projet
 git clone https://github.com/crystalloide/HBase
 cd ~/HBase/
+```
 
+```bash
 # 2. Construire l'image (première fois, ~20-30 min selon le réseau)
 docker compose build
+```
 
+```bash
 # 3. Démarrer le cluster
 docker compose up -d
+```
 
+```bash
 # 4. Suivre les logs de srvmaster01
 docker compose logs -f srvmaster01
+```
 
+```bash
 # 5. Vérifier l'état du cluster (attendre ~3-5 min après le démarrage)
 docker exec -it srvmaster01 /opt/scripts/cluster-status.sh
 ```
