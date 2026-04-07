@@ -33,7 +33,7 @@
   <!-- Web UI NameNode -->
   <property>
     <name>dfs.namenode.http-address</name>
-    <value>srvmaster01:9870</value>
+    <value>0.0.0.0:9870</value>
   </property>
 
   <!-- Bloc HDFS = 128 MB -->
