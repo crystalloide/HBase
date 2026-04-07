@@ -58,7 +58,8 @@ cd ~/HBase/
 
 ```bash
 # 2. Construire l'image (première fois, ~20-30 min selon le réseau)
-docker compose build
+# docker compose build
+docker compose build --no-cache
 ```
 
 ```bash
