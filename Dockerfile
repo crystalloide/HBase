@@ -59,7 +59,7 @@ ENV HADOOP_MAPRED_HOME=$HADOOP_HOME
 ENV HADOOP_COMMON_HOME=$HADOOP_HOME
 ENV HADOOP_HDFS_HOME=$HADOOP_HOME
 ENV HADOOP_YARN_HOME=$HADOOP_HOME
-RUN wget -q https://archive.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz \
+RUN wget -q https://downloads.apache.org/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz \
         -O /tmp/hadoop.tar.gz \
     && tar -xzf /tmp/hadoop.tar.gz -C /opt \
     && mv /opt/hadoop-${HADOOP_VERSION} /opt/hadoop \
@@ -72,7 +72,7 @@ ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
 # ── HBase 2.6.4 ──────────────────────────────────────────────
 ENV HBASE_VERSION=2.6.4
 ENV HBASE_HOME=/opt/hbase
-RUN wget -q https://archive.apache.org/dist/hbase/${HBASE_VERSION}/hbase-${HBASE_VERSION}-bin.tar.gz \
+RUN wget -q https://downloads.apache.org/hbase/${HBASE_VERSION}/hbase-${HBASE_VERSION}-bin.tar.gz \
         -O /tmp/hbase.tar.gz \
     && tar -xzf /tmp/hbase.tar.gz -C /opt \
     && mv /opt/hbase-${HBASE_VERSION} /opt/hbase \
@@ -83,7 +83,7 @@ ENV PATH=$PATH:$HBASE_HOME/bin
 # ── Zeppelin 0.10.1 ──────────────────────────────────────────
 ENV ZEPPELIN_VERSION=0.10.1
 ENV ZEPPELIN_HOME=/opt/zeppelin
-RUN wget -q https://archive.apache.org/dist/zeppelin/zeppelin-${ZEPPELIN_VERSION}/zeppelin-${ZEPPELIN_VERSION}-bin-all.tgz \
+RUN wget -q https://downloads.apache.org/zeppelin/zeppelin-${ZEPPELIN_VERSION}/zeppelin-${ZEPPELIN_VERSION}-bin-all.tgz \
         -O /tmp/zeppelin.tgz \
     && tar -xzf /tmp/zeppelin.tgz -C /opt \
     && mv /opt/zeppelin-${ZEPPELIN_VERSION}-bin-all /opt/zeppelin \
