@@ -1,7 +1,7 @@
 # ============================================================
 #  Hadoop Lab – Image unique pour tous les nœuds
 #  Java 11 (requis par HBase 2.6.x) | ZK 3.7.2 | Hadoop 3.3.6
-#  HBase 2.6.4 | Zeppelin 0.10.1
+#  HBase 2.6.4 | Zeppelin 0.12.0
 # ============================================================
 FROM ubuntu:20.04
 
@@ -80,8 +80,8 @@ RUN wget -q https://downloads.apache.org/hbase/${HBASE_VERSION}/hbase-${HBASE_VE
     && chown -R hadoop:hadoop /opt/hbase
 ENV PATH=$PATH:$HBASE_HOME/bin
 
-# ── Zeppelin 0.10.1 ──────────────────────────────────────────
-ENV ZEPPELIN_VERSION=0.10.1
+# ── Zeppelin 0.12.0 ──────────────────────────────────────────
+ENV ZEPPELIN_VERSION=0.12.0
 ENV ZEPPELIN_HOME=/opt/zeppelin
 RUN wget -q https://downloads.apache.org/zeppelin/zeppelin-${ZEPPELIN_VERSION}/zeppelin-${ZEPPELIN_VERSION}-bin-all.tgz \
         -O /tmp/zeppelin.tgz \
