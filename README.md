@@ -122,7 +122,7 @@ docker exec -it srvmaster01 hbase shell
 # Lancer un job MapReduce de test
 docker exec -it srvmaster01 bash -c \
   "hdfs dfs -mkdir -p /user/hadoop && \
-   hadoop jar /opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.1.0.jar \
+   hadoop jar /opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar \
    pi 2 100"
 ```
 
