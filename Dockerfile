@@ -1,6 +1,6 @@
 # ============================================================
 #  Hadoop Lab – Image unique pour tous les nœuds
-#  Java 11 (requis par HBase 2.6.x) | ZK 3.7.0 | Hadoop 3.3.6
+#  Java 11 (requis par HBase 2.6.x) | ZK 3.7.2 | Hadoop 3.3.6
 #  HBase 2.6.4 | Zeppelin 0.10.1
 # ============================================================
 FROM ubuntu:20.04
@@ -39,10 +39,10 @@ RUN mkdir -p /home/hadoop/.ssh \
 RUN echo "StrictHostKeyChecking no"       >> /etc/ssh/ssh_config \
     && echo "UserKnownHostsFile /dev/null" >> /etc/ssh/ssh_config
 
-# ── ZooKeeper 3.7.0 ──────────────────────────────────────────
-ENV ZK_VERSION=3.7.0
+# ── ZooKeeper 3.7.2 ──────────────────────────────────────────
+ENV ZK_VERSION=3.7.2
 ENV ZOOKEEPER_HOME=/opt/zookeeper
-RUN wget -q https://archive.apache.org/dist/zookeeper/zookeeper-${ZK_VERSION}/apache-zookeeper-${ZK_VERSION}-bin.tar.gz \
+RUN wget -q https://downloads.apache.org/zookeeper/zookeeper-${ZK_VERSION}/apache-zookeeper-${ZK_VERSION}-bin.tar.gz \
         -O /tmp/zookeeper.tar.gz \
     && tar -xzf /tmp/zookeeper.tar.gz -C /opt \
     && mv /opt/apache-zookeeper-${ZK_VERSION}-bin /opt/zookeeper \
