@@ -132,8 +132,8 @@ case "${NODE_ROLE}" in
     log "Démarrage HBase Master..."
     su hadoop -c "HBASE_MANAGES_ZK=false ${HBASE_HOME}/bin/hbase master start \
         >> ${HBASE_HOME}/logs/hbase-master.log 2>&1" &
-    wait_for 127.0.0.1 16000 "HBase Master RPC"   120 || warn "HBase Master RPC non dispo"
-    wait_for 127.0.0.1 16010 "HBase Master WebUI" 60  || warn "HBase Master WebUI non dispo"
+    wait_for ${IP_MASTER01} 16000 "HBase Master RPC"   120 || warn "HBase Master RPC non dispo"
+    wait_for ${IP_MASTER01} 16010 "HBase Master WebUI" 60  || warn "HBase Master WebUI non dispo"
 
     log "Démarrage Zeppelin..."
     su hadoop -c "${ZEPPELIN_HOME}/bin/zeppelin-daemon.sh start" \
