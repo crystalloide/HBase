@@ -51,7 +51,7 @@ export PYTHONPATH=/usr/bin/python3
 # ZEPPELIN — port, mémoire, répertoires
 # ═══════════════════════════════════════════════════════════════
 export ZEPPELIN_ADDR=0.0.0.0
-export ZEPPELIN_PORT=8080
+export ZEPPELIN_PORT=8082
 
 export ZEPPELIN_LOG_DIR=/opt/zeppelin/logs
 export ZEPPELIN_PID_DIR=/opt/zeppelin/run
