@@ -1,0 +1,74 @@
+## Solution en 3 étapes
+
+Étape 1 — Extraire les sources Ruby dans le conteneur
+
+# Entre dans le conteneur
+
+docker compose exec srvmaster01 bash
+docker compose exec srvdata0x bash
+
+# Crée le répertoire cible et extrait les scripts Ruby du JAR
+mkdir -p /opt/hbase/lib/ruby/sources
+
+cd /opt/hbase/lib/ruby/sources
+
+jar -xf /opt/hbase/lib/hbase-shell-2.6.4.jar
+
+# Vérifie
+chmod 777 -Rf /opt/hbase/lib/ruby/sources/
+ls /opt/hbase/lib/ruby/sources/
+
+# Doit afficher : shell.rb  hbase.rb  jar-bootstrap.rb  shell/  hbase/
+
+Adapte le chemin si $HBASE_HOME n'est pas /opt/hbase — vérifie avec echo $HBASE_HOME.
+
+Étape 2 — Configurer l'interpréteur Zeppelin
+
+Dans l'UI Zeppelin → Interpreter → hbase :
+
+	Propriété			Valeur
+
+	hbase.home			/opt/hbase (ou $HBASE_HOME réel)
+
+	hbase.ruby.sources	/lib/ruby/			/lib/ruby/sources/shell/commands
+
+
+Dans la section Dependencies, ajoute :
+
+/opt/hbase/lib/hbase-client-2.6.4.jar
+/opt/hbase/lib/hbase-common-2.6.4.jar
+/opt/hbase/lib/hbase-protocol-2.6.4.jar
+/opt/hbase/lib/hbase-shell-2.6.4.jar
+
+
+Étape 3 — Redémarre et teste
+
+Clique Save puis Restart sur l'interpréteur HBase, 
+puis dans un paragraphe du notebook :
+
+%hbase
+status
+
+
+
+Rendre ça persistant dans docker-compose.yml
+
+L'extraction dans le conteneur sera perdue au redémarrage. Pour la pérenniser, ajoute une commande dans ton docker-compose.yml :
+
+text
+services:
+  hbase:
+    # ... ta config existante ...
+    command: >
+      bash -c "
+        mkdir -p /opt/hbase/lib/ruby/sources &&
+        cd /opt/hbase/lib/ruby/sources &&
+        jar -xf /opt/hbase/lib/hbase-shell-2.6.4.jar &&
+        /opt/hbase/bin/start-hbase.sh &&
+        /opt/zeppelin/bin/zeppelin.sh
+      "
+    volumes:
+      - hbase_ruby_sources:/opt/hbase/lib/ruby/sources
+
+volumes:
+  hbase_ruby_sources:
