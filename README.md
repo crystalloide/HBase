@@ -86,7 +86,7 @@ docker exec -it srvmaster01 /opt/scripts/cluster-status.sh
 | Secondary NameNode   | http://localhost:9868        |
 | HBase Master         | http://localhost:16010       |
 | MapReduce History    | http://localhost:19888       |
-| Zeppelin             | http://localhost:8080        |
+| Zeppelin             | http://localhost:8082        |
 
 ## Accès aux conteneurs
 
