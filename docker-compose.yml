@@ -57,7 +57,7 @@ services:
       - "19888:19888"  # MapReduce JobHistory UI
       - "16010:16010"  # HBase Master UI
       - "16000:16000"  # HBase Master RPC
-      - "8080:8080"    # Zeppelin
+      - "8082:8082"    # Zeppelin
       - "2181:2181"    # ZooKeeper client (master01)
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "9870"]
