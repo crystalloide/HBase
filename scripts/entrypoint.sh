@@ -106,16 +106,15 @@ case "${NODE_ROLE}" in
     log "Démarrage NameNode..."
     su hadoop -c "${HADOOP_HOME}/bin/hdfs --daemon start namenode"
     sleep 5
-    # Vérifier sur l'IP locale (127.0.0.1) ET l'IP publique
-    wait_for 127.0.0.1     9000 "NameNode RPC (local)"  60 \
-        || wait_for ${IP_MASTER01} 9000 "NameNode RPC (IP)" 30 \
+    # Vérifie sur l'IP de srvmaster01
+    wait_for ${IP_MASTER01} 9000 "NameNode RPC (IP)" 30 \
         || { err "NameNode RPC non dispo !"; cat ${HADOOP_HOME}/logs/hadoop-hadoop-namenode-*.log 2>/dev/null | tail -20; }
 
     log "Démarrage ResourceManager..."
     su hadoop -c "${HADOOP_HOME}/bin/yarn --daemon start resourcemanager"
     sleep 5
-    wait_for 127.0.0.1 8032 "RM RPC"    90 || warn "RM RPC non dispo (voir logs)"
-    wait_for 127.0.0.1 8088 "RM WebUI"  60 || warn "RM WebUI non dispo"
+    wait_for ${IP_MASTER01} 8032 "RM RPC"    90 || warn "RM RPC non dispo (voir logs)"
+    wait_for ${IP_MASTER01} 8088 "RM WebUI"  60 || warn "RM WebUI non dispo"
 
     su hadoop -c "${HADOOP_HOME}/bin/mapred --daemon start historyserver" \
         || warn "JobHistory non démarré"
